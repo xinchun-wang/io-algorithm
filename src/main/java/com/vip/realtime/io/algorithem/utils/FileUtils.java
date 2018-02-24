@@ -13,30 +13,29 @@ import org.slf4j.LoggerFactory;
 public class FileUtils {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
 
-
-  public String createFile(String path, String fileName) throws IOException {
+  public static File createFile(String path, String fileName) throws IOException {
     File filePath = new File(path);
     if(!filePath.exists()) {
       filePath.mkdirs();
     }
     File file = new File(path + File.separator + fileName);
-    if (!file.exists()) {
-      file.createNewFile();
+    if(file.exists()){
+      file.delete();
     }
-    return file.getAbsolutePath();
+    file.createNewFile();
+    return file;
   }
 
-  public BufferedWriter getWriter(File file) throws IOException{
-    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-    return bufferedWriter;
+  public static Writer getWriter(File file) throws IOException{
+    Writer writer = new BufferedWriter(new FileWriter(file));
+    return writer;
   }
 
-  public void write(BufferedWriter writer, String content) throws IOException{
+  public static void write(Writer writer, String content) throws IOException{
     writer.write(content);
-    writer.newLine();
   }
 
-  public void flushAndClose(Writer writer) throws IOException{
+  public static void flushAndClose(Writer writer) throws IOException{
     writer.flush();
     writer.close();
   }
@@ -49,6 +48,26 @@ public class FileUtils {
       System.out.println(line);
     }
     bufferedReader.close();
+  }
+
+  public static boolean delete(String fileName){
+    File filePath = new File(fileName);
+    if(!filePath.exists()){
+      LOG.info(" file path [{}] is not exist. ", fileName);
+      return false;
+    }
+    if(!filePath.isDirectory()){
+       filePath.deleteOnExit();
+      LOG.info("delete file : " + filePath);
+    }
+    File[] files = filePath.listFiles();
+    if(files == null){
+      return true;
+    }
+    for(File file : files){
+      delete(file.getAbsolutePath());
+    }
+    return true;
   }
 
 

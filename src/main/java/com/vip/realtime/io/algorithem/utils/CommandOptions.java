@@ -1,51 +1,76 @@
 package com.vip.realtime.io.algorithem.utils;
 
 public class CommandOptions {
-	public String folder;
+	private String basedir;
 
-    public String database = "bi";
-    public String tableName;
-    public String startParition;
-    public String endPartition;
-    public String help;
-    
-    public String getDatabase() {
-		return database;
-	}
-	public void setDatabase(String database) {
-		this.database = database;
-	}
+	private boolean warmup;
 
-	public String getTableName() {
-		return tableName;
-	}
+	private boolean goodslike;
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	private boolean firstorder;
+
+	/**
+	 * 数据的倍数
+	 */
+	private int factor = 1;
+
+	private String help;
+
+	public String getBasedir() {
+		return basedir;
 	}
 
-	public String getStartParition() {
-		return startParition;
+	public void setBasedir(String basedir) {
+		this.basedir = basedir;
 	}
 
-	public void setStartParition(String startParition) {
-		this.startParition = startParition;
+	public boolean isWarmup() {
+		return warmup;
 	}
 
-	public String getEndPartition() {
-		return endPartition;
+	public void setWarmup(boolean warmup) {
+		this.warmup = warmup;
 	}
 
-	public void setEndPartition(String endPartition) {
-		this.endPartition = endPartition;
+	public boolean isGoodslike() {
+		return goodslike;
+	}
+
+	public void setGoodslike(boolean goodslike) {
+		this.goodslike = goodslike;
+	}
+
+	public boolean isFirstorder() {
+		return firstorder;
+	}
+
+	public void setFirstorder(boolean firstorder) {
+		this.firstorder = firstorder;
 	}
 
 	public String getHelp() {
-        return help;
-    }
+		return help;
+	}
 
-    public void setHelp(String help) {
-        this.help = help;
-    }
+	public void setHelp(String help) {
+		this.help = help;
+	}
 
+	public int getFactor() {
+		return factor;
+	}
+
+	public void setFactor(int factor) {
+		this.factor = factor;
+	}
+
+	@Override
+	public String toString() {
+		return "input: " +
+				"basedir='" + basedir + '\'' +
+				", warmup=" + warmup +
+				", goodslike=" + goodslike +
+				", firstorder=" + firstorder +
+				", factor=" + factor;
+	}
 }
