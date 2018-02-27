@@ -5,8 +5,6 @@ public class CommandOptions {
 
 	private boolean warmup;
 
-	private boolean goodslike;
-
 	private boolean firstorder;
 
 	/**
@@ -30,14 +28,6 @@ public class CommandOptions {
 
 	public void setWarmup(boolean warmup) {
 		this.warmup = warmup;
-	}
-
-	public boolean isGoodslike() {
-		return goodslike;
-	}
-
-	public void setGoodslike(boolean goodslike) {
-		this.goodslike = goodslike;
 	}
 
 	public boolean isFirstorder() {
@@ -69,7 +59,6 @@ public class CommandOptions {
 		return "input: " +
 				"basedir='" + basedir + '\'' +
 				", warmup=" + warmup +
-				", goodslike=" + goodslike +
 				", firstorder=" + firstorder +
 				", factor=" + factor;
 	}

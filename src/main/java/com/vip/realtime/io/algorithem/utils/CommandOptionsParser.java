@@ -22,16 +22,16 @@ public class CommandOptionsParser {
     baseDir.setRequired(true);
     options.addOption(baseDir);
 
-    Option warmup = new Option(Constants.WARMUP_KEY, false, "generate warmup data");
+    Option warmup = new Option(Constants.WARMUP_KEY, true, "generate warmup data");
     options.addOption(warmup);
 
-    Option goodslike = new Option(Constants.GOODS_LIKE_KEY, false, "generate goods like data");
+    Option goodslike = new Option(Constants.GOODS_LIKE_KEY, true, "generate goods like data");
     options.addOption(goodslike);
 
-    Option firstorder = new Option(Constants.FIRST_ORDER_KEY, false, "generate first order data");
+    Option firstorder = new Option(Constants.FIRST_ORDER_KEY, true, "generate first order data");
     options.addOption(firstorder);
 
-    Option factor = new Option(Constants.FACTOR_KEY, false, "data factor");
+    Option factor = new Option(Constants.FACTOR_KEY, true, "data factor");
     options.addOption(factor);
 
     Option h = new Option("h", false, "help info");
@@ -51,7 +51,6 @@ public class CommandOptionsParser {
       }
       commandOptions.setBasedir(cmd.getOptionValue(Constants.BASE_DIR_KEY));
       commandOptions.setWarmup(getValue(Constants.WARMUP_KEY,true));
-      commandOptions.setGoodslike(getValue(Constants.GOODS_LIKE_KEY, true));
       commandOptions.setFirstorder(getValue(Constants.FIRST_ORDER_KEY,true));
       commandOptions.setFactor(getValue(Constants.FACTOR_KEY, 1));
     } catch (ParseException e) {

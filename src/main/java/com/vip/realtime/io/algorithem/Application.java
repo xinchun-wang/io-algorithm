@@ -5,7 +5,6 @@ import com.vip.realtime.io.algorithem.data.FileWriter;
 import com.vip.realtime.io.algorithem.utils.CommandOptions;
 import com.vip.realtime.io.algorithem.utils.CommandOptionsParser;
 import com.vip.realtime.io.algorithem.utils.Constants;
-import com.vip.realtime.io.algorithem.utils.FileUtils;
 import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,49 +19,102 @@ public class Application {
   private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
   private CommandOptions commandOptions = new CommandOptions();
-  private BlockingQueue<String> dataQueue = new LinkedBlockingQueue<>(1024);
 
-
-  public void generatorOrderData() throws Exception{
-    int orderUserFactor = 4;
-    int userIdBound = Constants.FIRST_ORDER_DEFAULT_VALUE * orderUserFactor * commandOptions.getFactor();
-    int orders = Constants.FIRST_ORDER_DEFAULT_VALUE * commandOptions.getFactor();
-
-    BasicGenerator generator = new BasicGenerator(dataQueue, userIdBound, orders, 2);
+  public void generatorOrderData(){
+    LOG.info("begin generator order data.");
+    BlockingQueue<String> dataQueue = new LinkedBlockingQueue<>(1024);
+    BasicGenerator generator = new BasicGenerator(dataQueue,
+        Constants.FIRST_ORDER_DEFAULT_VALUE * Constants.ORDER_USER_FACTOR ,
+        Constants.FIRST_ORDER_DEFAULT_VALUE ,
+        commandOptions.getFactor());
     Thread generatorThread = new Thread(generator);
+    generatorThread.setName("Thread-Order-Generator");
     generatorThread.start();
 
-    createWriter(commandOptions.getBasedir() + File.separator + Constants.FIRST_ORDER_DIR);
-
+    Thread orderWriterThread = createWriter(
+        "Thread-Order-Writer",
+        dataQueue,
+        commandOptions.getBasedir() + File.separator + Constants.FIRST_ORDER_DIR,
+        commandOptions.getFactor());
+    try {
+      orderWriterThread.join();
+    }
+    catch (InterruptedException ignore){
+    }
+    LOG.info("finsh generator order data.");
   }
 
-  public void generatorWarmupAndBrandData() throws Exception{
-    BasicGenerator generator = new BasicGenerator(dataQueue, 10000, 2);
+  public void generatorWarmupBrandAndGoodsLikeData(){
+    LOG.info("begin warmup brand and goods like data.");
+
+    BlockingQueue<String> warmupBrandDataQueue = new LinkedBlockingQueue<>(1024);
+    BlockingQueue<String> goodsLikeDataQueue = new LinkedBlockingQueue<>(1024);
+
+    BasicGenerator generator = new BasicGenerator(
+        warmupBrandDataQueue,
+        goodsLikeDataQueue,
+        Constants.FIRST_ORDER_DEFAULT_VALUE * Constants.ORDER_USER_FACTOR ,
+        Constants.WARMUP_BRAND_NUMBER_DEFAULT_VALUE,
+        Constants.GOODS_LIKE_HUGE_PER_ACT_FACTOR,
+        10,
+        Constants.GOODS_LIKE_LARGE_PER_ACT_FACTOR,
+        commandOptions.getFactor());
+
     Thread generatorThread = new Thread(generator);
+    generatorThread.setName("Thread-WarmupBrandAndGoods-Generator");
+
     generatorThread.start();
 
-    createWriter(commandOptions.getBasedir() + File.separator + Constants.WARMUP_BRAND_DIR);
+    Thread warmupBrandThread = createWriter(
+        "Thread-WarmupBrand-Writer",
+        warmupBrandDataQueue,
+        commandOptions.getBasedir() + File.separator + Constants.WARMUP_BRAND_DIR,
+        1);
+    try {
+      warmupBrandThread.join();
+    }
+    catch (InterruptedException ignore){
+    }
+
+    createWriter("Thread-GoodsLike-Writer",
+        goodsLikeDataQueue,
+        commandOptions.getBasedir() + File.separator + Constants.GOODS_LIKE_DIR,
+        commandOptions.getFactor());
+    LOG.info("finish warmup brand and goods like data.");
   }
 
-  protected void createWriter(String path){
-    FileWriter writer = new FileWriter(dataQueue, path, 3);
+  protected Thread createWriter(String name, BlockingQueue<String> dataQueue, String path, int files){
+    FileWriter writer = new FileWriter(dataQueue, path, files);
     Thread writerThread = new Thread(writer);
+    writerThread.setName(name);
     writerThread.start();
+    return writerThread;
   }
 
-
-  protected void parseArgs(String[] args){
+  protected CommandOptions parseArgs(String[] args){
     CommandOptionsParser optionsParser = new CommandOptionsParser();
     optionsParser.process(args, commandOptions);
 
     LOG.info(commandOptions.toString());
+    return commandOptions;
   }
 
+  /**
+   * 运行参数： -basedir /workspace/data -firstorder false -warmup true -factor 100
+   * 其中比赛的时候-factor 为100，可以将factor设置为一个较小的值，用于调试程序
+   * @param args
+   */
   public static void main(String[] args) {
     try {
       Application application = new Application();
-      application.parseArgs(args);
-      application.generatorWarmupAndBrandData();
+      CommandOptions commandOptions = application.parseArgs(args);
+
+      if(commandOptions.isFirstorder()) {
+        application.generatorOrderData();
+      }
+      if(commandOptions.isWarmup()) {
+        application.generatorWarmupBrandAndGoodsLikeData();
+      }
     }
     catch (Exception e){
       LOG.error("", e);

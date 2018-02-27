@@ -37,7 +37,8 @@ public class FileWriter implements Runnable{
   public void out() throws Exception{
     Writer[] writers = new Writer[files];
     for(int i = 0; i < files; i++) {
-      File file = FileUtils.createFile(path, i + ".txt");
+      String fileName = i % 3 + "-" + i + ".txt";
+      File file = FileUtils.createFile(path, fileName);
       Writer writer = FileUtils.getWriter(file);
       writers[i] = writer;
     }
@@ -57,7 +58,7 @@ public class FileWriter implements Runnable{
         Writer writer = writers[writerIndex];
         FileUtils.write(writer, content);
         lineCounter++;
-        if(lineCounter % 100000 == 0){
+        if(lineCounter % 1000000 == 0){
           LOG.info("write lines = " + lineCounter);
         }
       } catch (InterruptedException ingore) {

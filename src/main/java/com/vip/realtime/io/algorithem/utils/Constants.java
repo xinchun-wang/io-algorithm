@@ -18,18 +18,46 @@ public class Constants {
 
   public static String FACTOR_KEY = "factor";
 
-  public static Integer WARMUP_BRAND_NUMBER_DEFAULT_VALUE = 1000;
+  /**
+   * 用户收藏的user id产生随机数区间 = 订单数量 * ORDER_USER_FACTOR
+   */
+  public static int ORDER_USER_FACTOR = 4;
 
-  public static Integer GOODS_LIKE_DEFAULT_VALUE = 500*10000;
+  /**
+   * 预热的活动数量
+   */
+  public static Integer WARMUP_BRAND_NUMBER_DEFAULT_VALUE = 100;
 
+  /**
+   * 每个活动的base收藏数量，{下限，平均，上限}，实际数量会*data factor
+   */
+  public static Integer GOODS_LIKE_PER_ACT_DEFAULT_LOW_VALUES = 100;
+
+  public static Integer GOODS_LIKE_PER_ACT_DEFAULT_UP_VALUES = 600;
+
+  public static Integer GOODS_LIKE_PER_ACT_DEFAULT_AVARGE_VALUES = 500;
+
+  /**
+   * 收藏的超大活动的数量倍数
+   */
+  public static Integer GOODS_LIKE_HUGE_PER_ACT_FACTOR = 1000;
+
+  /**
+   * 收藏的大型活动的数量倍数
+   */
+  public static Integer GOODS_LIKE_LARGE_PER_ACT_FACTOR = 100;
+
+  /**
+   * 首单的用户的数量基数
+   */
   public static Integer FIRST_ORDER_DEFAULT_VALUE = 300*10000;
 
-  public static long DAY_OF_2017_01_01_000000_MS = 1483200000000L;
+  public static Long DAY_OF_2017_01_01_000000_MS = 1483200000000L;
 
-  public static long DAY_OF_2017_12_31_235959_MS = 1514735999000L;
+  public static Long DAY_OF_2017_12_31_235959_MS = 1514735999000L;
 
-  public static long DAY_OF_2008_12_08_000000_MS = 1228665600000L;
+  public static Long DAY_OF_2008_12_08_000000_MS = 1228665600000L;
 
-  public static long DAY_OF_MS = 86400000L;
+  public static Long DAY_OF_MS = 86400000L;
 
 }

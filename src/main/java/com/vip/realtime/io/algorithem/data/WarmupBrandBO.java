@@ -6,6 +6,7 @@ package com.vip.realtime.io.algorithem.data;
 public class WarmupBrandBO {
   private String platform;
   private String actName;
+  private long actTime;
   private String actStartTime;
   private String actEndTime;
   private String brandName;
@@ -57,6 +58,14 @@ public class WarmupBrandBO {
 
   public void setBrandId(Integer brandId) {
     this.brandId = brandId;
+  }
+
+  public long getActTime() {
+    return actTime;
+  }
+
+  public void setActTime(long actTime) {
+    this.actTime = actTime;
   }
 
   @Override
