@@ -176,18 +176,19 @@ public class BasicGenerator implements  Runnable{
     Set<Integer> largeWarmupIndexSet = new HashSet<>();
 
     generalRandom.ints(largeWarmupCount * 2,0, warmupBrands)
-        .filter((warupIndex) -> {
-          if (largeWarmupIndexSet.contains(warupIndex)) {
+        .filter((warmupIndex) -> {
+          if (largeWarmupIndexSet.contains(warmupIndex)) {
             return false;
           }
           return true;
         }).limit(largeWarmupCount)
-        .forEach((warupIndex) -> largeWarmupIndexSet.add(warupIndex));
+        .forEach((warmupIndex) -> largeWarmupIndexSet.add(warmupIndex));
     return largeWarmupIndexSet;
   }
 
   protected int getGoodsLikeNumber(){
-    int goodsLikeNumber = getRandomInt(Constants.GOODS_LIKE_PER_ACT_DEFAULT_LOW_VALUES * dataFactor,
+    int goodsLikeNumber = getRandomInt(
+        Constants.GOODS_LIKE_PER_ACT_DEFAULT_LOW_VALUES * dataFactor,
         Constants.GOODS_LIKE_PER_ACT_DEFAULT_UP_VALUES * dataFactor);
     return goodsLikeNumber;
   }
@@ -232,6 +233,7 @@ public class BasicGenerator implements  Runnable{
     for(int i = 0; i <= remainder; i++){
       //每个活动的品牌数量
       int brandNumber = getRandomInt(4, 40);
+      Set<Integer> brandSet = new HashSet<>();
       for(int j= 0; j < brandNumber; j++) {
         WarmupBrandBO warmupBrandBO = new WarmupBrandBO();
         warmupBrandBO.setActName(actName);
@@ -240,7 +242,13 @@ public class BasicGenerator implements  Runnable{
         warmupBrandBO.setActEndTime(actEndTime);
         warmupBrandBO.setPlatform(plantforms[i]);
 
+        //单个活动的品牌去重
         int brandIndex = generalRandom.nextInt(warmupBrands);
+        while(brandSet.contains(brandIndex)){
+          brandIndex = generalRandom.nextInt(warmupBrands);
+        }
+        brandSet.add(brandIndex);
+
         BrandBO brandBO = brandBOList.get(brandIndex);
         warmupBrandBO.setBrandId(brandBO.getBrandId());
         warmupBrandBO.setBrandName(brandBO.getBrandName());
@@ -272,7 +280,8 @@ public class BasicGenerator implements  Runnable{
                 return true;
               }
             }
-          ).limit(warmupBrands)
+          )
+        .limit(warmupBrands)
         .forEach((generateBrandId) -> {
           String brandName = RandomStringUtils.randomAlphanumeric(10, 40);
           BrandBO brandBO = new BrandBO();
