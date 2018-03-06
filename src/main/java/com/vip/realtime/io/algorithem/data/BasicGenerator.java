@@ -211,7 +211,7 @@ public class BasicGenerator implements  Runnable{
     goodsLikeBuilder.append(brandBO.getPlatform()).append(",");
     goodsLikeBuilder.append(brandBO.getBrandId()).append(",");
     //截取时间
-    goodsLikeBuilder.append(addTime.substring(0, 11)).append("\n");
+    goodsLikeBuilder.append(addTime.substring(0, 10)).append("\n");
     return goodsLikeBuilder.toString();
   }
 
