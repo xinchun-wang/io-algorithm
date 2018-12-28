@@ -85,7 +85,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.vip.realtime.io.algorithem.Application</mainClass>
+              <mainClass>com.vip.realtime.io.algorithem.logprocess.LogProcessor</mainClass>
             </manifest>
           </archive>
         </configuration>
